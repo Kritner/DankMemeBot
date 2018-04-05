@@ -3,9 +3,10 @@ from slackclient import SlackClient
 
 class CommandHandler():
 
-    currentTargetForDankness = "lemoneylimeslimes"
-    memes = [
-        {"trigger" : "rules", 
+    _currentTargetForDankness = "lemoneylimeslimes"
+    _helpCommandString = "wat do"
+    _memes = [
+        {"trigger" : "rules",
         "channel" : None, 
         "responses": 
             ["This place isn't quite dank enough to get into the rules..."]},
@@ -15,7 +16,7 @@ class CommandHandler():
             [("Here are the rules..." + 
             "\nRule #1: Don’t tell {0}" + 
             "\nRule #2: If {0} still finds out, invite him." +
-            "\nRule #3: If {0} is in this channel, he can select the next potential candidate.").format(currentTargetForDankness)]},
+            "\nRule #3: If {0} is in this channel, he can select the next potential candidate.").format(_currentTargetForDankness)]},
         {"trigger" : "flavortown", 
         "channel" : None, 
         "responses": [
@@ -49,17 +50,13 @@ class CommandHandler():
         # Finds and executes the given command, filling in response
         response = None
         
-        channel_name = self.get_current_channel_name(slackClient, channel)
-
-        for meme in self.memes:
-            if command.lower().startswith(meme["trigger"].lower()):
-                if meme["channel"] == channel_name:
-                    response = meme["responses"][random.randrange(0, len(meme["responses"]) - 1)]
-                elif meme["channel"] is None:
-                    response = meme["responses"][random.randrange(0, len(meme["responses"]) - 1)]
+        if command.startswith(self._helpCommandString):
+            response = self._get_help()
+        else:
+            response = self._get_memes(slackClient, command, channel)
 
         if response is None:
-            return
+            response = "Hmm... I'm not sure what you mean.  Try '{0}' for commands".format(self._helpCommandString)
 
         # Sends the response back to the channel
         slackClient.api_call(
@@ -68,15 +65,15 @@ class CommandHandler():
             text=response
         )
 
-    def get_current_channel_name(self, slackClient, channel):
+    def _get_current_channel_name(self, slackClient, channel):
         channel_name = None
-        for chan in self.get_channel_list(slackClient, True):
+        for chan in self._get_channel_list(slackClient, True):
             if channel == chan["id"]:
                 channel_name = chan["name"]
 
         return channel_name
 
-    def get_channel_list(self, slackClient, includePrivate = True):
+    def _get_channel_list(self, slackClient, includePrivate = True):
         channelList = []
 
         apiChannels = slackClient.api_call("channels.list")
@@ -91,4 +88,32 @@ class CommandHandler():
                 channelList.append({"id": chan["id"], "name": chan["name"]})
 
         return channelList
+
+    def _get_help(self):
+        response = "DankMemeBot is capable of acting on the following trigger words:"
+        
+        for item in self._memes:
+            if item["trigger"] not in response:
+                response = response + "\n" + item["trigger"]
+        
+        return response
+
+    def _get_memes(self, slackClient, command, channel):
+        response = None
+        channel_name = self._get_current_channel_name(slackClient, channel)
+        for meme in self._memes:
+            if command.lower().startswith(meme["trigger"].lower()):
+                if meme["channel"] == channel_name:
+                    response = self._get_meme(meme)
+                elif meme["channel"] is None:
+                    response = self._get_meme(meme)
+
+        return response
+
+    def _get_meme(self, meme):
+        if len(meme["responses"]) == 1:
+            return meme["responses"][0]
+
+        return meme["responses"][random.randrange(0, len(meme["responses"]) - 1)]
+
 
