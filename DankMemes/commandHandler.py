@@ -46,6 +46,16 @@ class CommandHandler():
             "https://youtu.be/0W51GIxnwKc",
             "https://youtu.be/VfaNCw2bF48",
             "https://youtu.be/RT0soCWpH3Q"
+        ]},
+        {"trigger" : "doge", 
+        "channel" : None, 
+        "index" : 0,
+        "responses": [
+            "https://mtgcardsmith.com/view/complete/full/2017/8/21/1503338850980696.png",
+            "http://i0.kym-cdn.com/photos/images/newsfeed/000/581/723/a8b.jpg",
+            "http://i0.kym-cdn.com/photos/images/newsfeed/000/581/168/9f1.jpg",
+            "http://i0.kym-cdn.com/photos/images/newsfeed/000/581/567/bab.jpg",
+            "http://i0.kym-cdn.com/photos/images/newsfeed/000/661/142/c03.jpg"
         ]}]
 
     def handle_command(self, slackClient, command, channel):
