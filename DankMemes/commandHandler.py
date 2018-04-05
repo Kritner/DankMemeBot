@@ -3,15 +3,19 @@ from slackclient import SlackClient
 
 class CommandHandler():
 
+    _memeMode = "sequential"
+    _memeModeToggleString = "memeMode"
     _currentTargetForDankness = "lemoneylimeslimes"
     _helpCommandString = "wat do"
     _memes = [
         {"trigger" : "rules",
         "channel" : None, 
+        "index" : 0,
         "responses": 
             ["This place isn't quite dank enough to get into the rules..."]},
         {"trigger" : "rules", 
         "channel" : "dank_memers", 
+        "index" : 0,
         "responses": 
             [("Here are the rules..." + 
             "\nRule #1: Don’t tell {0}" + 
@@ -19,6 +23,7 @@ class CommandHandler():
             "\nRule #3: If {0} is in this channel, he can select the next potential candidate.").format(_currentTargetForDankness)]},
         {"trigger" : "flavortown", 
         "channel" : None, 
+        "index" : 0,
         "responses": [
             "http://i0.kym-cdn.com/photos/images/newsfeed/001/355/960/bf2.jpg",
             "http://i0.kym-cdn.com/photos/images/newsfeed/001/053/453/f5f.jpg",
@@ -27,6 +32,7 @@ class CommandHandler():
         ]},
         {"trigger" : "it is wednesday my dudes", 
         "channel" : None, 
+        "index" : 0,
         "responses": [
             "https://www.youtube.com/watch?v=du-TY1GUFGk",
             "https://www.youtube.com/watch?v=YSDAAh6Lps4",
@@ -52,6 +58,15 @@ class CommandHandler():
         
         if command.startswith(self._helpCommandString):
             response = self._get_help()
+        elif command.startswith(self._memeModeToggleString):
+            response = "changing current 'memeMode' of {0} ".format(self._memeMode)
+            
+            if self._memeMode == "sequential":
+                self._memeMode = "random"
+            else:
+                self._memeMode = "sequential"
+
+            response = response + "to {0}.".format(self._memeMode)
         else:
             response = self._get_memes(slackClient, command, channel)
 
@@ -90,12 +105,18 @@ class CommandHandler():
         return channelList
 
     def _get_help(self):
-        response = "DankMemeBot is capable of acting on the following trigger words:"
-        
+        response = ("DankMemeBot is currently operating in {0} meme mode, " +
+            "and capable of acting on the following trigger words:").format(self._memeMode)
+        response = response + "\n----------\n"
+
         for item in self._memes:
             if item["trigger"] not in response:
                 response = response + "\n" + item["trigger"]
         
+        response = response + "\n----------\n"
+        response = response + ("\nUse command '{0}' " +
+            "to toggle the current meme mode (random or sequential)").format(self._memeModeToggleString)
+
         return response
 
     def _get_memes(self, slackClient, command, channel):
@@ -114,6 +135,14 @@ class CommandHandler():
         if len(meme["responses"]) == 1:
             return meme["responses"][0]
 
-        return meme["responses"][random.randrange(0, len(meme["responses"]) - 1)]
+        if self._memeMode == "random":
+            return meme["responses"][random.randrange(0, len(meme["responses"]) - 1)]
+
+        if meme["index"] == len(meme["responses"]):
+            meme["index"] = 0
+
+        response = meme["responses"][meme["index"]]
+        meme["index"] += 1
+        return response
 
 
