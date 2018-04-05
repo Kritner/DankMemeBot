@@ -52,7 +52,7 @@ class CommandHandler():
         channel_name = self.get_current_channel_name(slackClient, channel)
 
         for meme in self.memes:
-            if command.startswith(meme["trigger"]):
+            if command.lower().startswith(meme["trigger"].lower()):
                 if meme["channel"] == channel_name:
                     response = meme["responses"][random.randrange(0, len(meme["responses"]) - 1)]
                 elif meme["channel"] is None:
