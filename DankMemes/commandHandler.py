@@ -23,6 +23,22 @@ class CommandHandler():
             "http://i0.kym-cdn.com/photos/images/newsfeed/001/053/453/f5f.jpg",
             "http://i0.kym-cdn.com/photos/images/newsfeed/000/972/194/cd9.jpg",
             "https://i.chzbgr.com/full/9101308416/h26CA5A46/"
+        ]},
+        {"trigger" : "it is wednesday my dudes", 
+        "channel" : None, 
+        "responses": [
+            "https://www.youtube.com/watch?v=du-TY1GUFGk",
+            "https://www.youtube.com/watch?v=YSDAAh6Lps4",
+            "https://www.youtube.com/watch?v=m2Z0CyuyfMI",
+            "https://youtu.be/Oct2xKMGOno?list=RDRT0soCWpH3Q",
+            "https://www.youtube.com/watch?v=OzQ-KvxLVT0",
+            "https://youtu.be/VaPMUACYWww",
+            "https://www.youtube.com/watch?v=csqJK8wwaHw",
+            "https://www.youtube.com/watch?v=JHO61_wDC30",
+            "https://youtu.be/RT0soCWpH3Q",
+            "https://youtu.be/0W51GIxnwKc",
+            "https://youtu.be/VfaNCw2bF48",
+            "https://youtu.be/RT0soCWpH3Q"
         ]}]
 
     def handle_command(self, slackClient, command, channel):
