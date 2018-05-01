@@ -5,7 +5,7 @@ class CommandHandler():
 
     _memeMode = "sequential"
     _memeModeToggleString = "memeMode"
-    _currentTargetForDankness = "lemoneylimeslimes"
+    _currentTargetForDankness = "michael"
     _helpCommandString = "wat do"
     _memes = [
         {"trigger" : "rules",
